@@ -53,9 +53,7 @@ with st.sidebar:
 # ── Page Router ──────────────────────────────────────────────────────────────
 if page == "펀드 종합현황":
     from views.summary import render
-
     render()
 else:
     from views.history import render
-
     render()
