@@ -40,7 +40,7 @@ def render():
     with c2:
         kpi_card("누적 약정총액", fmt_억(total_commitment))
     with c3:
-        kpi_card("운용중", f"{active}개", "진행중 펀드")
+        kpi_card("운용중", f"{active}개")
     with c4:
         kpi_card("회수완료", f"{closed}개")
 
