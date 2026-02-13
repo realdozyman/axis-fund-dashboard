@@ -201,6 +201,11 @@ def inject_css():
     header[data-testid="stHeader"] {
         background: transparent;
     }
+    [data-testid="collapsedControl"] {
+        background: #FFFFFF;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
 
     @media (max-width: 768px) {
         .kpi-value { font-size: 20px; }
