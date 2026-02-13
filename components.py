@@ -199,7 +199,6 @@ def inject_css():
     .stDataFrame { border-radius: 8px; overflow: hidden; }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
 
     @media (max-width: 768px) {
         .kpi-value { font-size: 20px; }
