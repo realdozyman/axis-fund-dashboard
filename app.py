@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="액시스 펀드현황",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 inject_css()
