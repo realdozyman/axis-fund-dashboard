@@ -10,6 +10,20 @@ from config import PRIMARY, ACCENT, LIGHT, MUTED, TEXT
 
 
 def inject_css():
+    # Google Analytics
+    st.markdown(
+        """
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YDP6Z5LKH9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YDP6Z5LKH9');
+    </script>
+    """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown(
         """
     <style>
