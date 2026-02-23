@@ -6,6 +6,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import streamlit as st
+from datetime import datetime
 
 # ── 1. 페이지 설정 (반드시 최상단) ────────────────────────────────────────
 st.set_page_config(
@@ -79,16 +80,68 @@ def check_password():
 # 인증 확인
 check_password()
 
-# ── 6. 인증 성공 후 실제 헤더 교체 ──────────────────────────────────────────
-# 공개용 헤더 숨기고 실제 대시보드 표시
-st.markdown("""
-<style>
-    /* 페이지 리프레시 효과 */
-    .main > div:first-child {
-        display: none;
-    }
-</style>
+# ── 6. 인증 성공 후 웰컴 헤더 카드 ─────────────────────────────────────────
+st.markdown("---")
+
+# 대시보드 헤더
+st.markdown(f"""
+<div style="
+    padding: 48px 32px;
+    background: linear-gradient(135deg, #667eea 0%, {PRIMARY} 100%);
+    border-radius: 16px;
+    color: white;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <h1 style="margin: 0 0 8px 0; font-size: 36px; font-weight: 700;">
+                📊 펀드 운용 현황
+            </h1>
+            <p style="margin: 0; font-size: 16px; opacity: 0.9;">
+                Axis Investment Fund Management Dashboard
+            </p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 14px; opacity: 0.85; margin-bottom: 4px;">
+                Last Updated
+            </div>
+            <div style="font-size: 20px; font-weight: 600;">
+                {datetime.now().strftime('%Y.%m.%d')}
+            </div>
+        </div>
+    </div>
+</div>
 """, unsafe_allow_html=True)
+
+# 빠른 요약 카드 (민감하지 않은 정보만)
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown(f"""
+    <div style="padding: 24px; background: white; border-radius: 12px; border: 2px solid #EEF1F5; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <div style="color: {MUTED}; font-size: 14px; margin-bottom: 8px;">📈 Dashboard Status</div>
+        <div style="font-size: 24px; font-weight: 700; color: {PRIMARY};">Active</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f"""
+    <div style="padding: 24px; background: white; border-radius: 12px; border: 2px solid #EEF1F5; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <div style="color: {MUTED}; font-size: 14px; margin-bottom: 8px;">🔄 Data Sync</div>
+        <div style="font-size: 24px; font-weight: 700; color: {PRIMARY};">Real-time</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f"""
+    <div style="padding: 24px; background: white; border-radius: 12px; border: 2px solid #EEF1F5; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+        <div style="color: {MUTED}; font-size: 14px; margin-bottom: 8px;">📅 Reporting Period</div>
+        <div style="font-size: 24px; font-weight: 700; color: {PRIMARY};">{datetime.now().strftime('%Y')}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("---")
 
 # ── 7. 메인 대시보드 (인증 성공 후에만 표시) ────────────────────────────────
 # Sidebar
