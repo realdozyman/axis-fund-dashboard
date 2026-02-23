@@ -9,7 +9,7 @@ import streamlit as st
 
 # ── 1. 페이지 설정 (반드시 최상단) ────────────────────────────────────────
 st.set_page_config(
-    page_title="액시스 펀드현황",
+    page_title="액시스인베스트먼트 펀드현황",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="auto",
@@ -29,7 +29,13 @@ from config import PRIMARY, MUTED
 
 inject_css()
 
-# ── 4. 패스워드 인증 ──────────────────────────────────────────────────────
+# ── 4. 공개용 헤더 (구글이 이것만 색인하도록) ──────────────────────────────
+# 패스워드 인증 전에 먼저 표시
+st.title("📊 액시스인베스트먼트")
+st.markdown("펀드 운용 현황 대시보드")
+st.markdown("")  # 빈 줄
+
+# ── 5. 패스워드 인증 ──────────────────────────────────────────────────────
 def check_password():
     """패스워드 인증 (Streamlit Secrets 사용)"""
     
@@ -42,39 +48,49 @@ def check_password():
 
     # 인증되지 않은 경우
     if "password_correct" not in st.session_state:
-        st.title("🔒 액시스인베스트먼트 펀드 현황")
-        st.markdown("내부 데이터 보호를 위해 비밀번호를 입력해주세요.")
+        st.markdown("---")
+        st.info("🔒 내부 데이터 보호를 위해 비밀번호를 입력해주세요.")
         st.text_input(
             "Password", 
             type="password", 
             on_change=password_entered, 
             key="password",
-            placeholder="비밀번호 입력"
+            placeholder="비밀번호 입력",
+            label_visibility="collapsed"
         )
-        return False
+        st.stop()  # 여기서 멈춤 (이후 코드 실행 안 됨)
     
     # 비밀번호 틀린 경우
     elif not st.session_state["password_correct"]:
-        st.title("🔒 액시스인베스트먼트 펀드 현황")
+        st.markdown("---")
+        st.error("❌ 비밀번호가 올바르지 않습니다")
         st.text_input(
             "Password", 
             type="password", 
             on_change=password_entered, 
             key="password",
-            placeholder="비밀번호 입력"
+            placeholder="비밀번호 입력",
+            label_visibility="collapsed"
         )
-        st.error("❌ 비밀번호가 올바르지 않습니다")
-        return False
+        st.stop()  # 여기서 멈춤
     
-    # 인증 성공
-    else:
-        return True
+    # 인증 성공 - 아무것도 리턴 안 함 (계속 진행)
 
-# ── 5. 인증 확인 ──────────────────────────────────────────────────────────
-if not check_password():
-    st.stop()  # 인증 실패 시 여기서 중단
+# 인증 확인
+check_password()
 
-# ── 6. 인증 성공 후 메인 대시보드 ──────────────────────────────────────────
+# ── 6. 인증 성공 후 실제 헤더 교체 ──────────────────────────────────────────
+# 공개용 헤더 숨기고 실제 대시보드 표시
+st.markdown("""
+<style>
+    /* 페이지 리프레시 효과 */
+    .main > div:first-child {
+        display: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ── 7. 메인 대시보드 (인증 성공 후에만 표시) ────────────────────────────────
 # Sidebar
 with st.sidebar:
     st.markdown(
