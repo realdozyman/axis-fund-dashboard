@@ -4,3 +4,5 @@ cache/
 .claude/
 src/
 *.bat
+.streamlit/secrets.toml
+"ecrets.toml 추가 (중요!)"
