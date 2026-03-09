@@ -10,17 +10,18 @@ from datetime import datetime
 
 # ── 1. 페이지 설정 (반드시 최상단) ────────────────────────────────────────
 st.set_page_config(
-    page_title="액시스인베스트먼트 펀드현황",
-    page_icon="📊",
+    page_title="Login",           # ← 기밀 노출 방지: 중립적 타이틀로 변경
+    page_icon="🔒",
     layout="wide",
     initial_sidebar_state="auto",
 )
 
-# ── 2. 메타 태그 (구글 검색 노출 방지) ────────────────────────────────────
+# ── 2. 메타 태그 강화 (구글 검색 노출 완전 차단) ──────────────────────────
 st.markdown("""
 <head>
-    <meta name="description" content="액시스인베스트먼트 펀드 운용 현황 대시보드">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="description" content="">
 </head>
 """, unsafe_allow_html=True)
 
@@ -30,16 +31,11 @@ from config import PRIMARY, MUTED
 
 inject_css()
 
-# ── 4. 공개용 헤더 (구글이 이것만 색인하도록) ──────────────────────────────
-# 패스워드 인증 전에 먼저 표시
-st.title("📊 액시스인베스트먼트")
-st.markdown("펀드 운용 현황 대시보드")
-st.markdown("")  # 빈 줄
-
-# ── 5. 패스워드 인증 ──────────────────────────────────────────────────────
+# ── 4. 패스워드 인증 ──────────────────────────────────────────────────────
+# ※ 인증 전에는 어떠한 기밀 정보도 렌더링하지 않음
 def check_password():
     """패스워드 인증 (Streamlit Secrets 사용)"""
-    
+
     def password_entered():
         if st.session_state["password"] == st.secrets["password"]:
             st.session_state["password_correct"] = True
@@ -49,41 +45,78 @@ def check_password():
 
     # 인증되지 않은 경우
     if "password_correct" not in st.session_state:
-        st.markdown("---")
-        st.info("🔒 내부 데이터 보호를 위해 비밀번호를 입력해주세요.")
+        st.markdown(f"""
+        <div style="
+            max-width: 400px;
+            margin: 80px auto 0 auto;
+            padding: 40px 32px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #EEF1F5;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            text-align: center;
+        ">
+            <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+            <div style="font-size: 20px; font-weight: 700; color: {PRIMARY}; margin-bottom: 8px;">
+                AXIS Investment
+            </div>
+            <div style="font-size: 14px; color: {MUTED}; margin-bottom: 24px;">
+                내부 접근 전용 시스템입니다.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         st.text_input(
-            "Password", 
-            type="password", 
-            on_change=password_entered, 
+            "Password",
+            type="password",
+            on_change=password_entered,
             key="password",
             placeholder="비밀번호 입력",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
         )
-        st.stop()  # 여기서 멈춤 (이후 코드 실행 안 됨)
-    
+        st.stop()
+
     # 비밀번호 틀린 경우
     elif not st.session_state["password_correct"]:
-        st.markdown("---")
+        st.markdown(f"""
+        <div style="
+            max-width: 400px;
+            margin: 80px auto 0 auto;
+            padding: 40px 32px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #EEF1F5;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            text-align: center;
+        ">
+            <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+            <div style="font-size: 20px; font-weight: 700; color: {PRIMARY}; margin-bottom: 8px;">
+                AXIS Investment
+            </div>
+            <div style="font-size: 14px; color: {MUTED}; margin-bottom: 24px;">
+                내부 접근 전용 시스템입니다.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         st.error("❌ 비밀번호가 올바르지 않습니다")
         st.text_input(
-            "Password", 
-            type="password", 
-            on_change=password_entered, 
+            "Password",
+            type="password",
+            on_change=password_entered,
             key="password",
             placeholder="비밀번호 입력",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
         )
-        st.stop()  # 여기서 멈춤
-    
-    # 인증 성공 - 아무것도 리턴 안 함 (계속 진행)
+        st.stop()
 
-# 인증 확인
+# 인증 확인 (이 줄 이후부터만 기밀 데이터 렌더링)
 check_password()
 
-# ── 6. 인증 성공 후 웰컴 헤더 카드 ─────────────────────────────────────────
-st.markdown("---")
+# ── 5. 인증 성공 후: 페이지 타이틀을 실제 타이틀로 교체 ──────────────────
+st.markdown("""
+<script>document.title = "액시스인베스트먼트 펀드현황";</script>
+""", unsafe_allow_html=True)
 
-# 대시보드 헤더
+# ── 6. 인증 성공 후 웰컴 헤더 카드 ─────────────────────────────────────────
 st.markdown(f"""
 <div style="
     padding: 48px 32px;
@@ -114,7 +147,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# 빠른 요약 카드 (민감하지 않은 정보만)
+# 빠른 요약 카드
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -144,10 +177,8 @@ with col3:
 st.markdown("---")
 
 # ── 7. 메인 대시보드 (인증 성공 후에만 표시) ────────────────────────────────
-# Sidebar
 with st.sidebar:
-    st.markdown(
-        f"""
+    st.markdown(f"""
     <div style="padding: 20px 0 16px 0; margin-bottom: 20px; border-bottom: 1px solid #EEF1F5;">
         <div style="font-size: 20px; font-weight: 700; color: {PRIMARY};">
             AXIS Investment
@@ -156,9 +187,7 @@ with st.sidebar:
             Fund Management Dashboard
         </div>
     </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
 
     page = st.radio(
         "메뉴",
@@ -166,14 +195,11 @@ with st.sidebar:
         label_visibility="collapsed",
     )
 
-    st.markdown(
-        f"""
+    st.markdown(f"""
     <div style="position: fixed; bottom: 16px; left: 16px; font-size: 11px; color: {MUTED};">
         Data: Google Sheets (auto-refresh)
     </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
 
 # Page Router
 if page == "펀드 종합현황":
